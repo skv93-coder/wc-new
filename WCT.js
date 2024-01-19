@@ -1,7 +1,7 @@
 const fs = require("fs");
 const readline = require("readline/promises");
 
-class WCL {
+class WCT {
   constructor(fileName) {
     this.fileName = fileName;
     this.lines = 0;
@@ -41,6 +41,9 @@ class WCL {
     console.table(table);
   }
   isFileExist = async () => {
+    if (this.fileName === null) {
+      return true;
+    }
     return new Promise((resolve, reject) => {
       fs.stat(this.fileName, (err) => {
         if (err && err.code === "ENOENT") {
@@ -53,7 +56,10 @@ class WCL {
   };
   getStatsOfFile = async () => {
     await this.isFileExist();
-    const input = fs.createReadStream(this.fileName);
+    const input =
+      this.fileName != null
+        ? fs.createReadStream(this.fileName)
+        : process.stdin;
     const rl = readline.createInterface({
       input,
       output: process.stdout,
@@ -71,4 +77,4 @@ class WCL {
   };
 }
 
-module.exports = { WCL };
+module.exports = { WCT };
